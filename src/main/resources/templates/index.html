@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista Zadań</title>
+    <style>
+        /* Proste style dla czytelności */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .actions a, .actions button { margin-right: 5px; text-decoration: none; padding: 5px 10px; border-radius: 3px; }
+        .actions .view-btn { background-color: #17a2b8; color: white; border: none;}
+        .actions .edit-btn { background-color: #ffc107; color: black; border: none;}
+        .actions .delete-btn { background-color: #dc3545; color: white; border: none; cursor: pointer;}
+        .actions form { display: inline; /* Aby formularz usunięcia był w linii */}
+        .add-task-btn {
+            display: inline-block;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<h2> Witaj (uzytkownik?)</h2>
+<h1>Moje Zadania</h1>
+
+<a th:href="@{/tasks/new}" class="add-task-btn">Dodaj nowe zadanie</a>
+
+<div th:if="${tasks == null or tasks.isEmpty()}">
+    <p>Nie masz jeszcze przypisanych żadnych zadań.</p>
+</div>
+
+<div th:unless="${tasks == null or tasks.isEmpty()}">
+    <table>
+        <thead>
+        <tr>
+            <th>Tytuł</th>
+            <th>Status</th>
+            <th>Akcje (CRUD)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="task : ${tasks}">
+            <td th:text="${task.title}">Przykładowy tytuł zadania</td>
+
+            <td th:text="${task.status}">NOWY</td>
+
+            <td class="actions">
+                <a th:href="@{/tasks/{id}(id=${task.id})}" class="view-btn">Szczegóły</a>
+
+                <a th:href="@{/tasks/edit/{id}(id=${task.id})}" class="edit-btn">Edytuj</a>
+
+                <form th:action="@{/tasks/delete/{id}(id=${task.id})}"
+                      th:method="post"
+                      onsubmit="return confirm('Czy na pewno chcesz usunąć to zadanie?');">
+                    <button type="submit" class="delete-btn">Usuń</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

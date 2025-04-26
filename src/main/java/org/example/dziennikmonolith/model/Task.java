@@ -1,13 +1,16 @@
-package org.example.dziennikmonolith.models;
+package org.example.dziennikmonolith.model;
 
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "tasks")
 public class Task {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "title", nullable = false)
     private String title;
+    @Column(name = "description")
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
