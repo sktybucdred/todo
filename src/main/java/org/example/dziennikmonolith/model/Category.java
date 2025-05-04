@@ -2,10 +2,12 @@ package org.example.dziennikmonolith.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 @Entity
 @Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "category")
