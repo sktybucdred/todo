@@ -14,17 +14,17 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "user")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
-    @Getter
-    @Column(nullable = false)
+
+    @Column(nullable = false, unique = true)
     private String username;
-    private String password;
+
     @Column(nullable = false)
-    private String name;
+    private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks;

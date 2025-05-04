@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Lista Zadań</title>
     <style>
@@ -25,6 +25,12 @@
 </head>
 <body>
 <h2> Witaj (uzytkownik?)</h2>
+<form th:action="@{/logout}" method="post">
+    <!-- wstrzyknięcie CSRF tokena -->
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    <button type="submit">Wyloguj</button>
+</form>
+
 <h1>Moje Zadania</h1>
 
 <a th:href="@{/tasks/new}" class="add-task-btn">Dodaj nowe zadanie</a>

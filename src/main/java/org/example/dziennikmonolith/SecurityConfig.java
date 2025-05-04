@@ -1,9 +1,15 @@
 package org.example.dziennikmonolith;
 
+import org.example.dziennikmonolith.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
@@ -11,20 +17,53 @@ import static org.springframework.boot.autoconfigure.security.servlet.PathReques
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final UserService userService;
+
+    public SecurityConfig(UserService userService) {
+        this.userService = userService;
+    }
+
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // --- Konfiguracja H2 Console (jeśli używasz) ---
-                .csrf(csrf -> csrf.ignoringRequestMatchers(toH2Console()))
-                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()))
-                // --- Koniec Konfiguracji H2 Console ---
-
-                .authorizeHttpRequests(auth -> auth
-                        // .requestMatchers(toH2Console()).permitAll() // Nadal możesz chcieć zezwolić na H2
-                        .anyRequest().permitAll() // !!!! ZEZWÓL NA WSZYSTKIE ŻĄDANIA !!!!
-                );
-        // Nie konfiguruj UserDetailsService ani formLogin, jeśli nie są potrzebne
-
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(toH2Console()).permitAll()
+                        .requestMatchers("/register", "/css/**", "/js/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/tasks", true)
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                        .permitAll()
+                )
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers(toH2Console())
+                )
+                .headers(headers -> headers
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
+                )
+                ;
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+        authBuilder
+                .userDetailsService(userService)
+                .passwordEncoder(passwordEncoder());
+        return authBuilder.build();
+    }
+
+    @Bean
+    public static PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
