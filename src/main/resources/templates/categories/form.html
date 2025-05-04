@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/_layout :: html(pageTitle=${pageTitle ?: 'Formularz Kategorii'}, content=~{::content})}">
+<head>
+</head>
+<body>
+<div th:fragment="content">
+    <h1 th:text="${pageTitle}">Formularz Kategorii</h1>
+
+    <div th:if="${#request.getAttribute('errorMessage') != null}" class="alert alert-danger">
+        <span th:text="${#request.getAttribute('errorMessage')}"></span>
+    </div>
+    <div th:if="${#request.getAttribute('category') != null}" th:with="cat=${#request.getAttribute('category')}">
+    </div>
+
+
+    <form th:object="${category ?: #request.getAttribute('category')}"
+          th:action="${category == null || category.id == null} ? @{/categories/save} : @{/categories/{id}/update(id=${category.id})}"
+          method="post">
+
+        <input type="hidden" th:if="${category != null && category.id != null}" th:field="*{id}" />
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Nazwa kategorii:</label>
+            <input type="text" id="name" th:field="*{name}" class="form-control" required autofocus />
+            <div class="text-danger" th:if="${#fields != null && #fields.hasErrors('name')}" th:errors="*{name}">Błąd nazwy</div>
+        </div>
+
+        <button type="submit" class="btn btn-success me-2" th:text="${category == null || category.id == null ? 'Dodaj kategorię' : 'Zaktualizuj kategorię'}">Zapisz</button>
+        <a th:href="@{/categories}" class="btn btn-secondary">Anuluj</a>
+    </form>
+</div>
+</body>
+</html>

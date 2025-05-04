@@ -18,4 +18,9 @@ public class Category {
     @Column(name = "name", nullable = false)
     private String name;
 
+    // Relacja ManyToOne - wiele kategorii może należeć do jednego użytkownika
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }
+
