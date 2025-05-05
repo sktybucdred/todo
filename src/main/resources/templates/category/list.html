@@ -1,28 +1,28 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="pl"
-      th:replace="~{fragments/_layout :: layout('Moje Statusy', ${successMessage}, ${errorMessage})}">
+      th:replace="fragments/_layout :: layout('Moje Kategorie', ${successMessage}, ${errorMessage})">
 <div th:fragment="content">
-    <h1>Moje Statusy</h1>
+    <h1>Moje Kategorie</h1>
 
     <div th:if="${deleteError}" class="alert alert-danger">
         <span th:text="${deleteError}"></span>
     </div>
 
-    <a th:href="@{/statuses/new}" class="btn btn-success mb-3">Dodaj nowy status</a>
+    <a th:href="@{/categories/new}" class="btn btn-success mb-3">Dodaj nową kategorię</a>
 
     <table class="table table-striped">
         <thead>
         <tr><th>Nazwa</th><th>Akcje</th></tr>
         </thead>
         <tbody>
-        <tr th:each="s : ${statuses}">
-            <td th:text="${s.name}">Nazwa</td>
+        <tr th:each="cat : ${categories}">
+            <td th:text="${cat.name}">Nazwa</td>
             <td>
-                <a th:href="@{/statuses/edit/{id}(id=${s.id})}"
+                <a th:href="@{/categories/edit/{id}(id=${cat.id})}"
                    class="btn btn-warning btn-sm me-1">Edytuj</a>
-                <form th:action="@{/statuses/delete/{id}(id=${s.id})}"
+                <form th:action="@{/categories/delete/{id}(id=${cat.id})}"
                       method="post" style="display:inline"
-                      onsubmit="return confirm('Usunąć status?');">
+                      onsubmit="return confirm('Usunąć kategorię?');">
                     <input type="hidden" th:name="${_csrf.parameterName}"
                            th:value="${_csrf.token}" />
                     <button class="btn btn-danger btn-sm">Usuń</button>

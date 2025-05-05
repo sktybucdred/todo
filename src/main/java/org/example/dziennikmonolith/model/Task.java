@@ -1,9 +1,17 @@
 package org.example.dziennikmonolith.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.example.dziennikmonolith.model.Status;
 
 @Entity
+@Data
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "tasks")
 public class Task {
     @Id

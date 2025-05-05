@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl"
+      th:replace="~{fragments/_layout :: layout(${task.id} == null ? 'Nowy Task' : 'Edytuj Task',
+                                           ${successMessage},
+                                           ${errorMessage})}">
+
+<div th:fragment="content">
+    <h1 th:text="${task.id} == null ? 'Dodaj nowy Task' : 'Edytuj Task'">Task</h1>
+
+    <div th:if="${error}" class="alert alert-danger">
+        <span th:text="${error}"></span>
+    </div>
+
+
+    <form th:with="actionUrl=${task.id} == null
+                           ? @{/tasks/new}
+                           : @{/tasks/edit/{id}(id=${task.id})}"
+          th:action="${actionUrl}"
+          th:object="${task}"
+          method="post">
+
+        <input type="hidden" th:name="${_csrf.parameterName}"
+               th:value="${_csrf.token}" />
+
+        <input type="hidden" th:field="*{id}" th:if="${task.id != null}" />
+
+        <div class="mb-3">
+            <label for="title" class="form-label">Tytuł Taska</label>
+            <input type="text" id="title" th:field="*{title}"
+                   class="form-control"
+                   placeholder="np. Zrobić zakupy"
+                   required />
+            <div class="text-danger" th:if="${#fields.hasErrors('title')}"
+                 th:errors="*{title}">Błąd tytułu</div>
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Opis Taska</label>
+            <textarea id="description" th:field="*{description}"
+                      class="form-control"
+                      placeholder="np. Kupić mleko, chleb, jajka"></textarea>
+            <div class="text-danger" th:if="${#fields.hasErrors('description')}"
+                 th:errors="*{description}">Błąd opisu</div>
+        </div>
+
+        <div class="mb-3">
+            <label for="status">Status</label>
+            <select id="status" name="statusId" class="form-control" required>
+                <option value="">-- Wybierz Status --</option>
+                <option th:each="status : ${statuses}"
+                        th:value="${status.id}"
+                        th:text="${status.name}"
+                        th:selected="${task.status != null and task.status.id == status.id}">
+                    Nazwa Statusu
+                </option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="category">Kategoria</label>
+            <select id="category" name="categoryId" class="form-control" required>
+                <option value="">-- Wybierz Kategorię --</option>
+                <option th:each="category : ${categories}"
+                        th:value="${category.id}"
+                        th:text="${category.name}"
+                        th:selected="${task.category != null and task.category.id == category.id}">
+                    Nazwa Kategorii
+                </option>
+            </select>
+        </div>
+
+
+        <button type="submit" class="btn btn-primary me-2">Zapisz Taska</button>
+        <a th:href="@{/tasks}" class="btn btn-secondary">Anuluj</a>
+    </form>
+</div>
+</html>

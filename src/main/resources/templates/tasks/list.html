@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl"
+      th:replace="~{fragments/_layout :: layout('Moje Taski', ${successMessage}, ${errorMessage})}">
+<div th:fragment="content">
+    <h1>Moje Taski</h1>
+
+    <div th:if="${deleteError}" class="alert alert-danger">
+        <span th:text="${deleteError}"></span>
+    </div>
+
+    <a th:href="@{/tasks/new}" class="btn btn-success mb-3">Dodaj nowy Task</a>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Tytuł</th>
+            <th>Opis</th>
+            <th>Status</th>
+            <th>Kategoria</th>
+            <th>Akcje</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="task : ${tasks}">
+            <td th:text="${task.title}">Tytuł Taska</td>
+            <td th:text="${task.description}">Opis Taska</td>
+            <td th:text="${task.status != null ? task.status.name : 'Brak statusu'}">Status Taska</td>
+            <td th:text="${task.category != null ? task.category.name : 'Brak kategorii'}">Kategoria Taska</td>
+            <td>
+                <a th:href="@{/tasks/edit/{id}(id=${task.id})}"
+                   class="btn btn-warning btn-sm me-1">Edytuj</a>
+                <form th:action="@{/tasks/delete/{id}(id=${task.id})}"
+                      method="post" style="display:inline"
+                      onsubmit="return confirm('Usunąć task?');">
+                    <input type="hidden" th:name="${_csrf.parameterName}"
+                           th:value="${_csrf.token}" />
+                    <button class="btn btn-danger btn-sm">Usuń</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</html>

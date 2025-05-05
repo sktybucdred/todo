@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                           http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="initial-data-001" author="kp">
+        <comment>Wstawianie danych inicjalnych: użytkownicy, kategorie, statusy, taski</comment>
+
+        <insert tableName="users">
+            <column name="username" value="user1"/>
+            <column name="password" value="$2a$07$fDnjyzAuKQbOoQkLwBlVhuzs/BVIwtYWfj4K0ZzSWtmPzA0EJv0Iy"/> <!-- pass1, nizej pass2 -->
+        </insert>
+        <insert tableName="users">
+            <column name="username" value="user2"/>
+            <column name="password" value="$2a$07$GF0n1OzWwUZGM1TfpjdoDuhz22k6HCaJYY7EErabnwvl2ag1irBeO"/>
+        </insert>
+
+        <insert tableName="statuses">
+            <column name="name" value="Do zrobienia"/>
+            <column name="user_id" valueNumeric="1"/> </insert>
+        <insert tableName="statuses">
+            <column name="name" value="W trakcie"/>
+            <column name="user_id" valueNumeric="1"/> </insert>
+        <insert tableName="statuses">
+            <column name="name" value="Zrobione"/>
+            <column name="user_id" valueNumeric="1"/> </insert>
+        <insert tableName="statuses">
+            <column name="name" value="Do zrobienia"/> <column name="user_id" valueNumeric="2"/> </insert>
+        <insert tableName="statuses">
+            <column name="name" value="Zakończone"/>
+            <column name="user_id" valueNumeric="2"/> </insert>
+
+
+        <insert tableName="category"> <column name="name" value="Praca"/>
+            <column name="user_id" valueNumeric="1"/> </insert>
+        <insert tableName="category"> <column name="name" value="Dom"/>
+            <column name="user_id" valueNumeric="1"/> </insert>
+        <insert tableName="category"> <column name="name" value="Zakupy"/>
+            <column name="user_id" valueNumeric="1"/> </insert>
+        <insert tableName="category"> <column name="name" value="Praca"/> <column name="user_id" valueNumeric="2"/> </insert>
+        <insert tableName="category"> <column name="name" value="Nauka"/>
+            <column name="user_id" valueNumeric="2"/> </insert>
+
+
+        <insert tableName="tasks">
+            <column name="title" value="Kupić mleko"/>
+            <column name="description" value="W sklepie spożywczym obok domu."/>
+            <column name="user_id" valueNumeric="1"/> <column name="category_id" valueNumeric="3"/> <column name="status_id" valueNumeric="1"/> </insert>
+        <insert tableName="tasks">
+            <column name="title" value="Przygotować prezentację"/>
+            <column name="description" value="Prezentacja na spotkanie zespołu."/>
+            <column name="user_id" valueNumeric="1"/> <column name="category_id" valueNumeric="1"/> <column name="status_id" valueNumeric="2"/> </insert>
+
+        <insert tableName="tasks">
+            <column name="title" value="Napisać raport"/>
+            <column name="description" value="Raport kwartalny dla szefa."/>
+            <column name="user_id" valueNumeric="2"/> <column name="category_id" valueNumeric="4"/> <column name="status_id" valueNumeric="4"/> </insert>
+        <insert tableName="tasks">
+            <column name="title" value="Przeczytać rozdział 5"/>
+            <column name="description" value="Rozdział o bazach danych."/>
+            <column name="user_id" valueNumeric="2"/> <column name="category_id" valueNumeric="5"/> <column name="status_id" valueNumeric="5"/> </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

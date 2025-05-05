@@ -3,6 +3,7 @@ package org.example.dziennikmonolith.controller;
 import jakarta.validation.Valid;
 import org.example.dziennikmonolith.model.Status;
 import org.example.dziennikmonolith.service.StatusService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class StatusController {
     private final StatusService statusService;
 
+    @Autowired
     public StatusController(StatusService statusService) {
         this.statusService = statusService;
     }

@@ -1,5 +1,6 @@
 package org.example.dziennikmonolith.repositories;
 
+import org.example.dziennikmonolith.model.Category;
 import org.example.dziennikmonolith.model.Status;
 import org.example.dziennikmonolith.model.Task;
 import org.example.dziennikmonolith.model.User;
@@ -12,6 +13,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     // For example, find tasks by status or user
     List<Task> findByStatus(Status status);
     List<Task> findByUser(User user);
+    boolean existsByUserAndCategory(User user, Category Category);
     boolean existsByUserAndStatus(User user, Status status);
-
+    boolean existsByUserAndTitle(User user, String title);
 }

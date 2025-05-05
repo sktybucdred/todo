@@ -2,32 +2,25 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="pl"
       th:replace="fragments/_layout :: layout('Moje Zadania', ${successMessage}, ${errorMessage})">
 <div th:fragment="content">
-    <h1>Moje Zadania</h1>
+    <h1 class="mb-4">Moje Zadania</h1> <a class="btn btn-success mb-4" th:href="@{/tasks/new}">Dodaj nowe zadanie</a>
 
-    <a class="btn btn-success mb-3" th:href="@{/tasks/new}">Dodaj nowe zadanie</a>
+    <div th:if="${tasks == null or tasks.isEmpty()}" class="alert alert-info" role="alert">
+        <p class="mb-0">Nie masz jeszcze przypisanych żadnych zadań.</p> </div>
 
-    <div th:if="${tasks == null or tasks.isEmpty()}">
-        <p>Nie masz jeszcze przypisanych żadnych zadań.</p>
-    </div>
     <div th:unless="${tasks == null or tasks.isEmpty()}">
-        <table class="table table-striped">
-            <thead>
-            <tr>
+        <table class="table table-striped table-hover table-bordered">
+            <thead class="table-dark"> <tr>
                 <th>Tytuł</th>
                 <th>Status</th>
-                <th>Akcje (CRUD)</th>
-            </tr>
+                <th class="text-center">Akcje (CRUD)</th> </tr>
             </thead>
             <tbody>
             <tr th:each="task : ${tasks}">
                 <td th:text="${task.title}">Przykładowy tytuł zadania</td>
                 <td th:text="${task.status.name}">NOWY</td>
-                <td>
-                    <a th:href="@{/tasks/{id}(id=${task.id})}" class="btn btn-info btn-sm me-1">
-                        Szczegóły
-                    </a>
-                    <a th:href="@{/tasks/edit/{id}(id=${task.id})}" class="btn btn-warning btn-sm me-1">
-                        Edytuj
+                <td class="text-center"> <a th:href="@{/tasks/{id}(id=${task.id})}" class="btn btn-info btn-sm me-2"> Szczegóły
+                </a>
+                    <a th:href="@{/tasks/edit/{id}(id=${task.id})}" class="btn btn-warning btn-sm me-2"> Edytuj
                     </a>
                     <form th:action="@{/tasks/delete/{id}(id=${task.id})}"
                           method="post" style="display:inline"

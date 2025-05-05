@@ -40,7 +40,10 @@ public class StatusService {
     public List<Status> listForCurrentUser() {
         return statusRepo.findByUser(currentUser());
     }
-
+    public Status findById(Long id) {
+        return statusRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Nie znaleziono statusu o podanym ID: " + id));
+    }
     @Transactional
     public Status create(Status status) {
         User user = currentUser();
