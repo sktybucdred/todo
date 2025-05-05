@@ -29,7 +29,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(toH2Console()).permitAll()
-                        .requestMatchers("/register", "/css/**", "/js/**").permitAll()
+                        .requestMatchers( "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/login", "/register").anonymous()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
