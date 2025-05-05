@@ -1,112 +1,45 @@
 <!DOCTYPE html>
-<html lang="pl" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Lista Zadań</title>
-    <style>
-        /* Proste style dla czytelności */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .actions a, .actions button {
-            margin-right: 5px;
-            text-decoration: none;
-            padding: 5px 10px;
-            border-radius: 3px;
-        }
-        .actions .view-btn {
-            background-color: #17a2b8;
-            color: white;
-            border: none;
-        }
-        .actions .edit-btn {
-            background-color: #ffc107;
-            color: black;
-            border: none;
-        }
-        .actions .delete-btn {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .actions form {
-            display: inline;
-        }
-        .add-task-btn {
-            display: inline-block;
-            padding: 10px 15px;
-            margin-bottom: 15px;
-            background-color: #28a745;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        /* nowy przycisk dla statusów */
-        .statuses-btn {
-            display: inline-block;
-            padding: 10px 15px;
-            margin-bottom: 15px;
-            margin-left: 10px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-    </style>
-</head>
-<body>
-<h2> Witaj <span th:text="${#authentication.name}">użytkownik</span></h2>
-<form method="post" th:action="@{/logout}">
-    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
-    <button type="submit">Wyloguj</button>
-</form>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl"
+      th:replace="fragments/_layout :: layout('Moje Zadania', ${successMessage}, ${errorMessage})">
+<div th:fragment="content">
+    <h1>Moje Zadania</h1>
 
-<h1>Moje Zadania</h1>
+    <a class="btn btn-success mb-3" th:href="@{/tasks/new}">Dodaj nowe zadanie</a>
 
-<!-- istniejący przycisk dodawania zadania -->
-<a class="add-task-btn" th:href="@{/tasks/new}">Dodaj nowe zadanie</a>
-<!-- NOWY przycisk przekierowania do modułu statusów -->
-<a class="statuses-btn" th:href="@{/statuses}">Statusy</a>
-
-<div th:if="${tasks == null or tasks.isEmpty()}">
-    <p>Nie masz jeszcze przypisanych żadnych zadań.</p>
+    <div th:if="${tasks == null or tasks.isEmpty()}">
+        <p>Nie masz jeszcze przypisanych żadnych zadań.</p>
+    </div>
+    <div th:unless="${tasks == null or tasks.isEmpty()}">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Tytuł</th>
+                <th>Status</th>
+                <th>Akcje (CRUD)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="task : ${tasks}">
+                <td th:text="${task.title}">Przykładowy tytuł zadania</td>
+                <td th:text="${task.status.name}">NOWY</td>
+                <td>
+                    <a th:href="@{/tasks/{id}(id=${task.id})}" class="btn btn-info btn-sm me-1">
+                        Szczegóły
+                    </a>
+                    <a th:href="@{/tasks/edit/{id}(id=${task.id})}" class="btn btn-warning btn-sm me-1">
+                        Edytuj
+                    </a>
+                    <form th:action="@{/tasks/delete/{id}(id=${task.id})}"
+                          method="post" style="display:inline"
+                          onsubmit="return confirm('Czy na pewno chcesz usunąć to zadanie?');">
+                        <input type="hidden" th:name="${_csrf.parameterName}"
+                               th:value="${_csrf.token}" />
+                        <button class="btn btn-danger btn-sm">Usuń</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
-
-<div th:unless="${tasks == null or tasks.isEmpty()}">
-    <table>
-        <thead>
-        <tr>
-            <th>Tytuł</th>
-            <th>Status</th>
-            <th>Akcje (CRUD)</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="task : ${tasks}">
-            <td th:text="${task.title}">Przykładowy tytuł zadania</td>
-            <td th:text="${task.status}">NOWY</td>
-            <td class="actions">
-                <a class="view-btn" th:href="@{/tasks/{id}(id=${task.id})}">Szczegóły</a>
-                <a class="edit-btn" th:href="@{/tasks/edit/{id}(id=${task.id})}">Edytuj</a>
-                <form onsubmit="return confirm('Czy na pewno chcesz usunąć to zadanie?');"
-                      th:action="@{/tasks/delete/{id}(id=${task.id})}"
-                      th:method="post">
-                    <button class="delete-btn" type="submit">Usuń</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-</body>
 </html>
