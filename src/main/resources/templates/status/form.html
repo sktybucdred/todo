@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl"
+      th:replace="fragments/_layout :: layout(${status.id} == null ? 'Nowy Status' : 'Edytuj Status',
+                                           ${successMessage},
+                                           ${errorMessage})">
+
+<div th:fragment="content">
+    <h1 th:text="${status.id} == null ? 'Dodaj nowy status' : 'Edytuj status'">Status</h1>
+
+    <div th:if="${error}" class="alert alert-danger">
+        <span th:text="${error}"></span>
+    </div>
+
+    <form th:with="actionUrl=${status.id} == null
+                           ? @{/statuses/new}
+                           : @{/statuses/edit/{id}(id=${status.id})}"
+          th:action="${actionUrl}"
+          th:object="${status}"
+          method="post">
+
+        <input type="hidden" th:name="${_csrf.parameterName}"
+               th:value="${_csrf.token}" />
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Nazwa</label>
+            <input type="text" id="name" th:field="*{name}"
+                   class="form-control"
+                   placeholder="np. IN_PROGRESS"
+                   required />
+            <div class="text-danger" th:if="${#fields.hasErrors('name')}"
+                 th:errors="*{name}">Błąd</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary me-2">Zapisz</button>
+        <a th:href="@{/statuses}" class="btn btn-secondary">Anuluj</a>
+    </form>
+</div>
+</html>

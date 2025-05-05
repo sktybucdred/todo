@@ -1,6 +1,7 @@
 package org.example.dziennikmonolith.model;
 
 import jakarta.persistence.*;
+import org.example.dziennikmonolith.model.Status;
 
 @Entity
 @Table(name = "tasks")
@@ -16,8 +17,10 @@ public class Task {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
-    @Enumerated(jakarta.persistence.EnumType.STRING)
-    private Status status; // NEW, IN_PROGRESS, COMPLETED
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "status_id", nullable = false)
+    private Status status;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

@@ -12,4 +12,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     // For example, find tasks by status or user
     List<Task> findByStatus(Status status);
     List<Task> findByUser(User user);
+    boolean existsByUserAndStatus(User user, Status status);
+
 }
